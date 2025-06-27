@@ -13,14 +13,14 @@ Este projeto demonstra como criar um **Model Context Protocol (MCP) Server** usa
 ### 1. Clone o repositório
 
 ```bash
-git clone <url-do-repositorio>
+git clone https://github.com/moises-paschoalick/java-sdk-mcp-server.git
 cd java-sdk-mcp-server
 ```
 
 ### 2. Navegue para o diretório do projeto MCP
 
 ```bash
-cd java-mcp/java-mcp
+cd java-mcp
 ```
 
 ### 3. Compile o projeto
@@ -47,17 +47,18 @@ java -jar target/java-mcp-1.0-SNAPSHOT.jar
 ```
 java-sdk-mcp-server/
 ├── java-mcp/
-│   └── java-mcp/
-│       ├── src/
-│       │   ├── main/
-│       │   │   ├── java/
-│       │   │   │   └── org/example/
-│       │   │   │       └── Main.java
-│       │   │   └── resources/
-│       │   └── test/
-│       ├── pom.xml
-│       └── .gitignore
-└── mpc-inspector/
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/
+│   │   │   │   └── org/example/
+│   │   │   │       └── Main.java
+│   │   │   └── resources/
+│   │   └── test/
+│   ├── pom.xml
+│   └── .gitignore
+├── README.md
+├── test-examples.md
+└── .gitignore
 ```
 
 ## 🔧 Funcionalidades Implementadas
@@ -108,7 +109,7 @@ npm install -g @modelcontextprotocol/inspector
 ### 2. Execute o servidor
 
 ```bash
-cd java-mcp/java-mcp
+cd java-mcp
 mvn clean package
 ```
 
@@ -136,7 +137,7 @@ Para usar este MCP server com Claude Desktop:
 ### 1. Obtenha o caminho completo do JAR
 
 ```bash
-cd java-mcp/java-mcp
+cd java-mcp
 FULL_PATH=$(pwd)/target/java-mcp-1.0-SNAPSHOT.jar
 echo $FULL_PATH
 ```
@@ -161,30 +162,27 @@ echo $FULL_PATH
 
 ## 📚 Dependências Principais
 
-- **MCP Java SDK**: `io.modelcontextprotocol.sdk:mcp:0.9.0`
 - **Jackson**: Para processamento JSON
 - **SLF4J**: Para logging
 
 ## 🔍 Exemplo de Implementação
 
-O servidor é implementado usando o padrão do MCP SDK:
+O servidor é implementado usando uma abordagem simplificada que simula o comportamento do MCP usando STDIO e JSON:
 
 ```java
-// Configurar o transport provider (STDIO)
-var transportProvider = new StdioTransportProvider();
+// Configurar entrada e saída
+BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out));
 
-// Criar o servidor MCP
-var syncServer = McpServer.sync(transportProvider)
-    .serverInfo("java-mcp-example", "1.0.0")
-    .capabilities(McpSchema.ServerCapabilities.builder()
-        .tools(true)
-        .logging()
-        .build())
-    .tools(createTools())
-    .build();
+// Enviar handshake inicial
+sendHandshake(writer);
 
-// Iniciar o servidor
-syncServer.run();
+// Loop principal para processar mensagens
+String line;
+while ((line = reader.readLine()) != null) {
+    JsonNode request = mapper.readTree(line);
+    processRequest(request, writer);
+}
 ```
 
 ## 🎯 Próximos Passos
@@ -218,3 +216,7 @@ Este projeto está sob a licença MIT. Veja o arquivo `LICENSE` para mais detalh
 ## 🆘 Suporte
 
 Se você encontrar algum problema ou tiver dúvidas, por favor abra uma issue no repositório.
+
+## 📝 Sobre
+
+Este projeto usa apenas o Java SDK para implementar um MCP Server. Para a implementação baseada em Spring, consulte o repositório [spring-ai-mcp-server](https://github.com/moises-paschoalick/spring-ai-mcp-server).
