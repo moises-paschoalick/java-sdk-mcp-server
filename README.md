@@ -1,6 +1,6 @@
 # Java SDK MCP Server
 
-Este projeto demonstra como criar um **Model Context Protocol (MCP) Server** usando o Java SDK oficial. O MCP é um protocolo que permite que ferramentas de IA conversem com sistemas externos de forma padronizada.
+Este projeto demonstra como criar um **Model Context Protocol (MCP) Server** usando somente o Java SDK. O MCP é um protocolo que permite que ferramentas de IA conversem com sistemas externos de forma padronizada.
 
 ## 📋 Pré-requisitos
 
